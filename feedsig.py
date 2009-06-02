@@ -10,7 +10,7 @@ __URL__="http://www.gialloporpora.netsons.org"
 #  How to use
 # First of all save your configuration in a json file for future use, use the example_config dictionary as example  and the funtion writeConfigFfile for create the json file from dictionary
 # to use the script from commandline:
-# python feedsig.py config.json
+# python feedsig.py configfile.json
 
 
 # The feed parser module is not included in standard Python packages, download and install it from: http://www.feedparser.org/
@@ -18,11 +18,15 @@ __URL__="http://www.gialloporpora.netsons.org"
 # if you have  setuptools simply install it with this command:
 # easy_install simplejson
 # Now an example that shows how to create the config dictionary and store it in a file
+# the data could be a dictionary or a list of dictionaries for multiple signature file configuration. 
 
-EXAMPLE=[{}]
-EXAMPLE[0]["global"]={"filename" : "firma.txt"}
+EXAMPLE=[{}, {}]
+EXAMPLE[0]["global"]={"filename" : "d:\\firme\\firma.txt"}
 EXAMPLE[0]["feed"]=[{"url" : "http://feeds.feedburner.com/IlBlogCheNonC", "mode" :"random"}, {"url" : "http://twitter.com/statuses/user_timeline/1320531.rss"}]
-EXAMPLE[0]["static_entry"]={"content" : ["Due cose sono infinite: l'universo e la stupidità umana, ma della prima non sono certo", "Ci sono 10 tipi di persone a questo mondo: chi capisce il linguaggio binario e chi non lo capisce"], "mode" : "begin"}
+EXAMPLE[0]["static_entry"]={"content" : ["Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", "There are only 10 types of people in the world: Those who understand binary, and those who don't", "God created the natural number, and all the rest is the work of man", " Give me a place to stand, and I will move the earth.", "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."]}
+# This define an HTML signature
+EXAMPLE[1]["global"]={"filename" : "d:\\firme\\firma.html", "encoding" : "utf-8"}
+EXAMPLE[1]["static_entry"]={"content" : ["Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", "There are only 10 types of people in the world: Those who understand binary, and those who don't", "God created the natural number, and all the rest is the work of man", "Give me a place to stand, and I will move the earth.", "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."] }
 
 
 import sys,urllib,feedparser, simplejson, short
@@ -86,8 +90,8 @@ def add_feed_signature(feed,type, shortenerService):
 def createSignature(data):
 	import types
 	if not(type(data)==types.ListType): data=[data]
-	for d in data:
-		writeSignatureFile(d)
+	for i in data:
+		writeSignatureFile(i)
 
 def writeSignatureFile(d):
 	"""
@@ -105,8 +109,8 @@ def writeSignatureFile(d):
 		else: staticentry=d["static_entry"]["content"]
 		if d['static_entry']['mode']=="begin" :
 			firma+=staticentry+br[sigtype]
-			if not(d["global"].has_key("shortenerService")): d["global"]["shortenerService"]='bitly'
-	firma+=add_feed_signature(d['feed'] , sigtype, d["global"]["shortenerService"])
+		if not(d["global"].has_key("shortenerService")): d["global"]["shortenerService"]='bitly'
+	if d.has_key("feed"): firma+=add_feed_signature(d['feed'] , sigtype, d["global"]["shortenerService"])
 	if d.has_key("static_entry"):
 		if d["static_entry"]["mode"]=="end":
 			firma+=staticentry+br[sigtype]
@@ -120,4 +124,4 @@ if __name__ == "__main__":
 	if len(sys.argv)>2: config_file=sys.argv[1]
 	else: config_file="sigconfig.json"
 	d=readConfigFromFile(config_file)
-	write_signature_file(d)
+	createSignature(d)
