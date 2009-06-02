@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # File feedsig.py
 __author__="Sandro Della Giustina (gialloporpora)"
 __date__="02 Jun 2009"
@@ -7,18 +6,15 @@ __license__="GPL"
 __version__="1.0"
 __URL__="http://www.gialloporpora.netsons.org"
 
-#  How to use
-# First of all save your configuration in a json file for future use, use the example_config dictionary as example  and the funtion writeConfigFfile for create the json file from dictionary
-# to use the script from commandline:
-# python feedsig.py configfile.json
+# For documentation on using this script to change your email signature see the readme.txt file
+
 
 
 # The feed parser module is not included in standard Python packages, download and install it from: http://www.feedparser.org/
-# From version 1.0 data are stored as json file, documentation about the json file are in readme.txt. To read and write json data  you must install simplejson from: http://pypi.python.org/pypi/simplejson/
-# if you have  setuptools simply install it with this command:
-# easy_install simplejson
-# Now an example that shows how to create the config dictionary and store it in a file
-# the data could be a dictionary or a list of dictionaries for multiple signature file configuration. 
+
+# EXAMPLE is a default setting, you could look at it to see how script works. EXAMPLE is stored in sigconfig.json file
+
+
 
 EXAMPLE=[{}, {}]
 EXAMPLE[0]["global"]={"filename" : "d:\\firme\\firma.txt"}
@@ -26,8 +22,13 @@ EXAMPLE[0]["feed"]=[{"url" : "http://feeds.feedburner.com/IlBlogCheNonC", "mode"
 EXAMPLE[0]["static_entry"]={"content" : ["Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", "There are only 10 types of people in the world: Those who understand binary, and those who don't", "God created the natural number, and all the rest is the work of man", " Give me a place to stand, and I will move the earth.", "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."]}
 # This define an HTML signature
 EXAMPLE[1]["global"]={"filename" : "d:\\firme\\firma.html", "encoding" : "utf-8"}
+EXAMPLE[1]["feed"]=[{"url" : "http://ws.audioscrobbler.com/1.0/user/gialloporpora/recenttracks.rss", "mode" : "random"}]
 EXAMPLE[1]["static_entry"]={"content" : ["Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", "There are only 10 types of people in the world: Those who understand binary, and those who don't", "God created the natural number, and all the rest is the work of man", "Give me a place to stand, and I will move the earth.", "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."] }
 
+
+# Required packages not available with default Python distributions:
+# simplejson: 
+# feedparser: 
 
 import sys,urllib,feedparser, simplejson, short
 from random import randrange
@@ -40,7 +41,7 @@ def writeConfigFile(d, f="sigconfig.json"):
 	"""
 	Create a json file to store your signature settings.
 	d - is an dictionary
-		f - a filename (string)
+	f - a filename (string)
 	"""
 	f=open(f,"w")
 	simplejson.dump(d, f, indent=2)
@@ -74,6 +75,7 @@ def add_feed_signature(feed,type, shortenerService):
 	s=""
 	for fd in feed:
 		x=feedparser.parse(fd["url"])
+		# if x: raise IOError("Unable to get feed, feed could be unavailable or you could have network connection problem")	
 		if  not(fd.has_key("mode")): fd["mode"]="last"
 		if  (fd["mode"]=="last"):n=0
 		else:  n=randrange(len(x.entries))
@@ -102,20 +104,20 @@ def writeSignatureFile(d):
 	sigtype=d["global"]["filename"].split(".")[-1]
 	br={'html':"<br/>",'txt':"\n"}
 	sigfile=open(d["global"]["filename"],"w")
-	firma=""
+	signature=""
 	if d.has_key("static_entry"):
 		if not(d["static_entry"].has_key("mode")):  d["static_entry"]["mode"]="end"
 		if type(d["static_entry"]["content"])==types.ListType: staticentry=d["static_entry"]["content"][randrange(len(d["static_entry"]["content"]))]
 		else: staticentry=d["static_entry"]["content"]
 		if d['static_entry']['mode']=="begin" :
-			firma+=staticentry+br[sigtype]
+			signature+=staticentry+br[sigtype]
 		if not(d["global"].has_key("shortenerService")): d["global"]["shortenerService"]='bitly'
-	if d.has_key("feed"): firma+=add_feed_signature(d['feed'] , sigtype, d["global"]["shortenerService"])
+	if d.has_key("feed"): signature+=add_feed_signature(d['feed'] , sigtype, d["global"]["shortenerService"])
 	if d.has_key("static_entry"):
 		if d["static_entry"]["mode"]=="end":
-			firma+=staticentry+br[sigtype]
+			signature+=staticentry+br[sigtype]
 		if not(d["global"].has_key("encoding")): d["global"]["encoding"]="utf-8"
-	sigfile.write(firma.encode(d["global"]["encoding"]))
+	sigfile.write(signature.encode(d["global"]["encoding"]))
 	sigfile.close()
 
 

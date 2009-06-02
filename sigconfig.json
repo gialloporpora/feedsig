@@ -1,0 +1,46 @@
+[
+  {
+    "feed": [
+      {
+        "url": "http://feeds.feedburner.com/IlBlogCheNonC", 
+        "mode": "random"
+      }, 
+      {
+        "url": "http://twitter.com/statuses/user_timeline/1320531.rss"
+      }
+    ], 
+    "static_entry": {
+      "content": [
+        "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", 
+        "There are only 10 types of people in the world: Those who understand binary, and those who don't", 
+        "God created the natural number, and all the rest is the work of man", 
+        " Give me a place to stand, and I will move the earth.", 
+        "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."
+      ]
+    }, 
+    "global": {
+      "filename": "d:\\firme\\firma.txt"
+    }
+  }, 
+  {
+    "feed": [
+      {
+        "url": "http://ws.audioscrobbler.com/1.0/user/gialloporpora/recenttracks.rss", 
+        "mode": "random"
+      }
+    ], 
+    "static_entry": {
+      "content": [
+        "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", 
+        "There are only 10 types of people in the world: Those who understand binary, and those who don't", 
+        "God created the natural number, and all the rest is the work of man", 
+        "Give me a place to stand, and I will move the earth.", 
+        "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."
+      ]
+    }, 
+    "global": {
+      "encoding": "utf-8", 
+      "filename": "d:\\firme\\firma.html"
+    }
+  }
+]
