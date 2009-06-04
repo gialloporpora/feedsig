@@ -54,3 +54,53 @@ By default the  script use the file **sigconfig.json** for reading settings, if 
 with an additional filename as parameters.
 
 **Good Luck!**
+
+
+
+================================================
+
+h2. Setting your own signature
+
+To  config your signature you could edit the **sigconfig.json** with a text editor or using python
+
+The data is a dictionary (or a list of dictionaries for more than one signature)  with this specification:
+
+* **global** is a dictionary containing global setting for your signature (**required**)
+* **feed** - it is a dictionary (or a list of dictionaries) that indicates  the feeds to get informations (**optional**)
+* **static_entry** - it is a dictionary containing simple text to  add at your signature, it could be added before the dinamic test from  feed, or after
+
+h2. Global settings
+
+The **global** dictionary have these keys, all values are simple string:
+
+* **filename** - the signature filename. The file extension must be **txt** if you compose in plain-text, **html** if you compose mail in HTML (**required**)
+* **encoding** - The charset encoding of your outgoing mail, by default **utf-8** (**optional**)
+
+h2. feed
+
+It is a dictionary (or a list of dictionaries) that contains info about feed to parse for getting dinamical entry in your signature. These are keys for dictionary:
+
+* **url** - The url of the feed. (**required**)
+**mode** it could be  be assume the value **random** if you want to get a random entry for your feed instead of the most recent one (**optional**)
+
+h2. static_entry
+
+This is a dictionary that contains static text phrases, this text phrases could be added before of after the feed entry part.  This dictionary have two keys:
+
+* **content** - a string (or a list of string) to insert  in your signature. If you put a list of string, one of them will be randomically added  in your signature. (**required**)
+* **mode** - You can set this key to **begin** for inserting the  text before feeds text part, by default the text will be added  after the feed part. (**optional**)
+
+
+**feed** and **static_entry** are optional but to have sense you must specify one of them in your setting otherwise  you will obtain an empty signature.
+
+h2. Saving your setting  in a file
+
+**>>> import feedsig**
+**>>> d={[ your data  }] # look to the **feedsig.EXAMPLE** for an example**
+**>>> feedsig.writeConfigFile(d)**
+
+
+
+
+
+
