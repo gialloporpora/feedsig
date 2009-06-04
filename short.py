@@ -1,4 +1,8 @@
+
 import urllib
+
+SUPPORTED_SHORTENER_SERVICES=["bitly", "snipurl", "snipurl"]
+
 class ShortUrlTemplate(object):
 	def __init__(self, name, APIurl, params,method='get'):
 			self.name=name
@@ -15,18 +19,20 @@ class ShortUrlTemplate(object):
 		f.close()
 		return s
 		
-	def getShortenedUrl(self, urlToShorten):
-		self.params["url"]=urlToShorten
-		return self.getResponse()
+	def getShortUrl(self, urlToShorten):
+		pass
 		
 class tinyurl(ShortUrlTemplate):
 	def __init__(self):
 		ShortUrlTemplate.__init__(self, "tinyurl", "http://tinyurl.com/api-create.php", {"url" : "http://www.google.com"})
+	def getShortUrl(self, urlToShorten):
+		self.params["url"]=urlToShorten
+		return self.getResponse()
 
 class bitly(ShortUrlTemplate):
 	def __init__(self):
 			ShortUrlTemplate.__init__(self, "bit.ly", "http://api.bit.ly/shorten", {"version" : "2.0.1","login" : "gialloporpora", "apiKey"  : "R_d7b1cb733163eff7887128b54d51eb79", "longUrl" : "http://www.google.com" } )
-	def getShortenedUrl(self, urlToShorten):
+	def getShortUrl(self, urlToShorten):
 		import simplejson
 		self.params["longUrl"]=urlToShorten
 		response=simplejson.loads(self.getResponse())
@@ -35,9 +41,9 @@ class snipurl(ShortUrlTemplate):
 	def __init__(self):
 		ShortUrlTemplate.__init__(self, "snipurl", "http://snipurl.com/site/getsnip", {"sniplink" : "http://www.snipurl.com", "snipuser" : "gialloporpora",  "snipapi" : "729d262e9e0f119431570b29eff5a484"}, "post")	
 		
-	def getShortenedUrl(self, urlToShorten):
+	def getShortUrl(self, urlToShorten):
 		import re
-		self.params["sniplink"]=urlToShorten
+		self.params["sniplink"]=urllib.unquote_plus(urlToShorten)
 		regex=re.compile("<id>([^<]+)</id>")
 		s=self.getResponse()
 		return regex.search(s).group(1).replace("snipurl.com","sn.im")
@@ -51,4 +57,4 @@ def getShortUrl(urlToShorten, service="bitly"):
 	if service=='tinyurl': shorturl=tinyurl()
 	elif service=='snipurl': shorturl=snipurl()
 	else: shorturl=bitly()
-	return shorturl.getShortenedUrl(urlToShorten)
+	return shorturl.getShortUrl(urlToShorten)
