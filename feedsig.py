@@ -30,9 +30,9 @@ EXAMPLE[1]["static_entry"]={"content" : ["Two things are infinite: the universe 
 # simplejson: 
 # feedparser: 
 
-import sys,urllib,feedparser, simplejson, short
+import re, sys,urllib,feedparser, simplejson, short
 from random import randrange
-from types import ListTypes
+from types import ListType
 
 
 # In this dictionary are stored signature settings
@@ -50,11 +50,11 @@ def writeConfigFile(d, f="sigconfig.json"):
 	f.close()
 
 def unescape(string):
+	""" 
+	Unescap special HTML characters as &amp;;, &nbsp;, &acute; ecc...
+	Original code: http://snippets.dzone.com/posts/show/4569
 	"""
 	from htmlentitydefs import name2codepoint as n2cp
-	import re
-	
-	"""
 	def substitute_entity(match):
 		ent = match.group(3)
 		if match.group(1) == "#":
