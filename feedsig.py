@@ -82,9 +82,9 @@ def readConfigFromFile(f="sigconfig.json"):
 
 def add_feed_signature(feed,type, shortenerService):
 	s=""
+	if type(feed)!=ListType: feed=[feed]
 	for fd in feed:
 		x=feedparser.parse(fd["url"])
-		# if x: raise IOError("Unable to get feed, feed could be unavailable or you could have network connection problem")	
 		if  not(fd.has_key("mode")): fd["mode"]="last"
 		if  (fd["mode"]=="last"):n=0
 		else:  n=randrange(len(x.entries))
