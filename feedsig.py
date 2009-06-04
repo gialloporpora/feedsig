@@ -32,6 +32,8 @@ EXAMPLE[1]["static_entry"]={"content" : ["Two things are infinite: the universe 
 
 import sys,urllib,feedparser, simplejson, short
 from random import randrange
+from types import ListTypes
+
 
 # In this dictionary are stored signature settings
 
@@ -47,23 +49,30 @@ def writeConfigFile(d, f="sigconfig.json"):
 	simplejson.dump(d, f, indent=2)
 	f.close()
 
-def replace_HTML_character(s):
-	""" Simple function to replace escaped character in HTML document """
+def unescape(string):
+	"""
+	from htmlentitydefs import name2codepoint as n2cp
+	import re
 	
-	s=s.replace("&#039;","'")
-	s=s.replace("&apos;","'")
-	s=s.replace('&quot;','"')
-	s=s.replace('&lt;',"<")
-	s=s.replace("&gt;",">")
-	s=s.replace("&amp;","&")
-	s=s.replace("&nbsp;"," ")
-	s=s.replace("&agrave;",u"à")
-	s=s.replace("&egrave;", u"è")
-	s=s.replace("&igrave;",u"ì")
-	s=s.replace("&ograve;",u"ò")
-	s=s.replace("&ugrave;",u"ù")
-	s=s.replace("&eacute;",u"é")
-	return s
+	"""
+	def substitute_entity(match):
+		ent = match.group(3)
+		if match.group(1) == "#":
+			# decoding by number
+			if match.group(2) == '':
+				# number is in decimal
+				return unichr(int(ent))
+			elif match.group(2) == 'x':
+				# number is in hex
+				return unichr(int('0x'+ent, 16))
+		else:
+			# they were using a name
+			cp = n2cp.get(ent)
+			if cp: return unichr(cp)
+			else: return match.group()
+	
+	entity_re = re.compile(r'&(#?)(x?)(\w+);')
+	return entity_re.subn(substitute_entity, string)[0]
 	
 def readConfigFromFile(f="sigconfig.json"):
 	f=open(f,"r")
@@ -80,7 +89,7 @@ def add_feed_signature(feed,type, shortenerService):
 		if  (fd["mode"]=="last"):n=0
 		else:  n=randrange(len(x.entries))
 		if x.feed!={}:
-			title=replace_HTML_character(x.entries[n]["title"])
+			title=unescape(x.entries[n]["title"])
 			link=x.entries[n]["link"]
 			if type=="txt":
 			 	link=short.getShortUrl(link,shortenerService)
@@ -91,7 +100,7 @@ def add_feed_signature(feed,type, shortenerService):
 
 def createSignature(data):
 	import types
-	if not(type(data)==types.ListType): data=[data]
+	if not(type(data)==ListType): data=[data]
 	for i in data:
 		writeSignatureFile(i)
 
@@ -107,7 +116,7 @@ def writeSignatureFile(d):
 	signature=""
 	if d.has_key("static_entry"):
 		if not(d["static_entry"].has_key("mode")):  d["static_entry"]["mode"]="end"
-		if type(d["static_entry"]["content"])==types.ListType: staticentry=d["static_entry"]["content"][randrange(len(d["static_entry"]["content"]))]
+		if type(d["static_entry"]["content"])==ListType: staticentry=d["static_entry"]["content"][randrange(len(d["static_entry"]["content"]))]
 		else: staticentry=d["static_entry"]["content"]
 		if d['static_entry']['mode']=="begin" :
 			signature+=staticentry+br[sigtype]
