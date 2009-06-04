@@ -80,9 +80,9 @@ def readConfigFromFile(f="sigconfig.json"):
 	f.close()
 	return data
 
-def add_feed_signature(feed,type, shortenerService):
+def add_feed_signature(feed,mode, shortenerService):
 	s=""
-	if type(feed)!=ListType: feed=[feed]
+	if type(feed)!=ListType: feed=[fee]
 	for fd in feed:
 		x=feedparser.parse(fd["url"])
 		if  not(fd.has_key("mode")): fd["mode"]="last"
@@ -91,7 +91,7 @@ def add_feed_signature(feed,type, shortenerService):
 		if x.feed!={}:
 			title=unescape(x.entries[n]["title"])
 			link=x.entries[n]["link"]
-			if type=="txt":
+			if mode=="txt":
 			 	link=short.getShortUrl(link,shortenerService)
 			 	s+="*%s* - %s\n" %(title,link)
 			else:

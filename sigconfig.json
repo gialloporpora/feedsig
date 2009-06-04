@@ -9,6 +9,9 @@
         "url": "http://twitter.com/statuses/user_timeline/1320531.rss"
       }
     ], 
+    "global": {
+      "filename": "d:\\firme\\firma.txt"
+    }, 
     "static_entry": {
       "content": [
         "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", 
@@ -17,9 +20,6 @@
         " Give me a place to stand, and I will move the earth.", 
         "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."
       ]
-    }, 
-    "global": {
-      "filename": "d:\\firme\\firma.txt"
     }
   }, 
   {
@@ -29,6 +29,10 @@
         "mode": "random"
       }
     ], 
+    "global": {
+      "filename": "d:\\firme\\firma.html", 
+      "encoding": "utf-8"
+    }, 
     "static_entry": {
       "content": [
         "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. ", 
@@ -37,10 +41,18 @@
         "Give me a place to stand, and I will move the earth.", 
         "To divide a cube into two other cubes, a fourth power or in general any power whatever into two powers of the same denomination above the second is impossible, and I have assuredly found an admirable proof of this, but the margin is too narrow to contain it."
       ]
-    }, 
+    }
+  }, 
+  {
+    "feed": [{
+      "url": "http://ws.audioscrobbler.com/1.0/user/gialloporpora/recenttracks.rss"
+    }],
     "global": {
-      "encoding": "utf-8", 
-      "filename": "d:\\firme\\firma.html"
+      "filename": "d:\\firme\\firma_ng.txt",
+      "shortenerService" : "snipurl"
+    }, 
+    "static_entry": {
+      "content": "* FAQ* di /it-alt.comp.software.mozilla/: http://bit.ly/1MZ04d"
     }
   }
 ]
