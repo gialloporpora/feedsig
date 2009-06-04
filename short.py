@@ -43,7 +43,7 @@ class snipurl(ShortUrlTemplate):
 		
 	def getShortUrl(self, urlToShorten):
 		import re
-		self.params["sniplink"]=urllib.unquote_plus(urlToShorten)
+		self.params["sniplink"]=urllib.quote(urlToShorten)  # this is strange for me to quote, arguments are automatically quoted by url
 		regex=re.compile("<id>([^<]+)</id>")
 		s=self.getResponse()
 		return regex.search(s).group(1).replace("snipurl.com","sn.im")
